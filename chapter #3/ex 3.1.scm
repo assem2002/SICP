@@ -1,0 +1,5 @@
+(define (make-accumulator inital)
+  (define (insider amount) (begin (set! inital (+ inital amount)) inital)) insider)
+(define m1 (make-accumulator 5))
+;(m1 10)
+;(m1 4)

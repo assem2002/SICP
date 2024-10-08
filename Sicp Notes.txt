@@ -1,0 +1,256 @@
+Notions About The Book
+
+- The book uses the approach in learning could be called as "I'll Make Your mind Blow up because of the load of questions and assumptions I'll force you to think about while doing the exercises, then I will clearify them to you just after two pages."
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+2.1.3 - What is meant by data?
+
+'''''
+
+Data is not just a punch of constructors and selectors that shapes a capusle which holds the data,
+It's more of a contract - a set of conditions that these constructors and selectors must fulfill so that compound-data object you build validates these conditions.
+So, you can think of any (literally any) kind of data you want to form as a set of procedures.
+
+even pairs which is thought of as a primitve data type in scheme-Lisp,could be descirbed in a set of three procedures (cons,car,cdr)-that maniuplate the lambda expression, Do you see how we made a data object of thin air (normal procedures)?
+
+even at some point you can get rid of the integers representation and represent the data object of intergers in term of procedures encapsulation (church numerals-lambda represenation).
+
+--------------------------------------
+2.2 hierarchical Data
+
+'''''''
+
+The book emphasize on the conecpt of CLOSURE properity (the properity of combining data together leading to a data object that itself could be combined with other data object using the same constructors that built this object in the first place).
+Here is a quote from the author about pairs-data structure "once you can have a pair you can have as many things as you want",
+so we can have lists and trees which are just bunch of pairs connected in a chain.
+or like the and, or, lisp-value we use in logical programming. how data matching and these primitve functions use the same kind of I/O  gave us the capability of sticking them together creating
+ -------------------------------------------------------------------
+ 
+ 2.2.2 - how the abstraction builds complexity? (p.153 code snippet)
+ '''''
+ 
+ by now you had build a map function that itself build a new list with somefunction applied to its elements,
+ by using such a simple procedure you can build a huge complexity such as traversing through a tree (you'll see how hard it is when you use just pairs to build a whole tree).
+ This shows us how can layers built upon each other providing us with abstracted tools, can give us the ability to make even more complex task such as travesing through a tree.
+ 
+ 
+ -----------------------------------------------------------------
+ how sequence operations is valuble?
+ ''''
+ you can define some complext function like sum-even-fib of some fib(n), you can write it easily own your own, but with a data abstraction like sequences, we're able to build an abstraction layer upon it that deals with sequences and do some important opeartions,so we can later build a more complex program such as, sum-even-fib with using these operations which now are just an abstracion layer.
+ -There is an exercise on the queens problem that utilise the sequence operartion we've made, though this problem in quite compelx to write it's solution in a language like lisp but with buliding abstracted blocks which do some easy tasks you can see how it can build a complex thing and solve such a problem.(fig 2.8)
+ 
+ -----------------------------------------------------------------
+ robust design by levels of language. (see layers figure in notebook)
+ ''''
+ we can build a picture language by using some vectors and segmets data object and their operations.
+ when you look at how the author built this language,you'll see that he dealt with something like segments as a language providing him with some tools and he just use these tools as primitves.
+ then he build the picture object (it's defined as a prodecure on some data which gives us power to take that picture to a higher level and operate on it as primitve),he pushes this object to the next level to make even more complex work.
+ what obseverable here is that you built layer on top of each other so later if you want to change a small piece you can change it with nearly to change to the other parts which makes our program robust.
+ ---------------------------------------------------------------------
+ tagged Data (fig 2.21)
+ '''
+ It's a way of building an abstraction barrier for your own program (interface) so we can have muliple representation of the data,and we just leave the choice of choosing which implementatino to use 
+ to the one who is gonna use my own program.
+ It's idea is based on taking the choice of the user and build a data object that is considered unique so i can take that information and pass it to the appropriate implementation, though you can choose multiple represenation of the data abstraction you're going to use but you still use the same layer of abstraction .
+ how it works? : you just take object tag it -> pass the object to a procedure that decide which implementation is gonna rule the program now and whenever the implementation build a data object of its own it just tag it so we can now to whom this piece of data belong.
+ 
+ This applies the principle of "the least commitment" as you get all the different implementation of the code and decide later which to choose, in our case we didn't even botherd ourselves with the appropriate representation- We made the user choose.
+ 
+ -------------------------------------------------------------------
+ data directed programming (fig 2.22)
+ ''''
+ the tagged Data approach was good but it has two drawbacks which are you can have collisions in with the names of the procedures ,and whenever you add a new representation of your data you need to handle a new caluse in the whole interface that your program provide; so consider a program with 100 interface procedures and 100 different implementations, It will be a mess.
+ so we use the data directed programming, this technique assumes an existence of a table that hold all the interface procedures in on axis and the other axis handles the argument permutation that get based to the procedure so when you call for example (pow int int) and (pow double int) the first will look up in the table for the pow row and the column with (int int) type and return you the desired procedure you want; this will kill the two problem we just mentioned, all what you really want is just to make your code as a package and you install it into the system table.
+ if you think about it, it's extremely similar to the concept of polymorphism in OOP when you use multiple representations through single interface, even when the polymorphism happens it get applied using a table called virtual table (notice: Polymorphism is an implementation of the data directed programming technique).
+ 
+ -------------------------------------------------------------------
+ message passing (illustration and explanation are in my notebook)
+ 
+ 
+ 
+ 
+ 
+ --------------------------------------------------------------
+ Hierarchy dataTypes
+ ''''
+ 
+ 
+ so far when you have a system of types that are represnted in a hierarchical form (see figure 2.25) we can a build a system that essentially depend on that idea of 
+ leveling your data type up to the most generic datatype in the system so far and apply the on it whether it's (add,sub,mul,div,cos,sin) and when you done your job just simplify the form again,
+ this way of design is hard to do when dealing with a multiple subtype-supertype data representation
+ 
+----------------------------------------------------------------
+assignment,computaional objects (see "https://youtube.com/clip/UgkxeBAPKGxvDASE98YPrThcRgUnARPTJqtg?si=X42jAI0P-I7VhdSq")
+''''''''''''''''
+quote from the book:
+
+"From the point of view of one part of a complex process, the other
+parts appear to change with time. they have hidden time-varying local
+state. If we wish to write computer programs whose structure reﬂects
+this decomposition, we make computational objects (such as bank ac-
+counts and random-number generators) whose behavior changes with
+time. We model state with local state variables, and we model the changes
+of state with assignments to those variables."
+
+Till this moment you'll notice we haven't used the though of assigning values to variable and mutate them to express the state of some procedure.
+when we change our prespective of procedures from just being a block of code that does the same exact thing over and over if it take the same input , to the prespective of that it's a block of code
+that if it has a local state variable the return of procedure would differ, now we're taking about what's called a computational object not just I/O procedure.
+we now can view things as procedures still,but not as mathematical procedure (I/O procedure) ,but rather an object that has a history and depending on this history it return values.
+all of that is doable by one using LOCAL STATE variable.
+--------------------------------------------------------------------
+The Cost of introducing the assignment 
+''''''
+
+We used to look at function from the mathematical view as a block of code that you give it input and always will result in the same output.
+that preception of what a procedure is made it easy to use something like substitution model so you can evaluate to output of your procedure.
+but when assignment got brought to the table this model of evalution got really messy because now you the symbols that describe values can change, they no longer only describe some constant value.
+Now we need to find another way to handle such a thing 
+-------------------------------------
+sameness and change
+''''
+our perception about what is the same object in out system and what's not will now be mysterious.
+one procedure would be assigned to different names like bank account, though they both have the same function but still not the same just because it used the notion of local state.
+so now if we want to say that two object aren't the same we have to operate on one if them and see if changes the state of the other on (check if it didn't change),but still we don't have a way to say if some procedure has changed its state or not so we fall in some dillema here.
+
+We used to look at what outstands an object from the other just by the totality of it (like rational numbers,just it's numerator and denomerator describe the uniqueness of the object);
+but now with the assignment we have another look to the object, it has an "IDENTITY" something very unique, so that we can a rational object "a" with value (3/4) is not the same as object "b" which it's value is also (3/4); and the object while its value is (5/4) and changes to (6/7) we can would say its still the same object.
+
+------------------------------------
+pitfalls of imperative programming 
+''''
+though it's easy to understand the program when you write in this style, it could produce so much bugs out of the idea of "what assignment statement should i place first to get what i want?", it makes you just care about what to write first and last while you have more important things to think about.
+
+--------------------------------------
+The Enviornment model of evalutation. (see figure 3.2 + 3.3)
+'''
+
+the book starts to introduce a new prespective of how we look to procedure calls, the model states the following:
+
+- every procedure defined using the keyword is essentially a lambda function (the define keyword is just a syntactic sugar)
+- we have a global environment which the main procedure we handle our program in, and whenever we call a procedure we just build an enviorment.
+- each environment has what's called a frame which is just a table of bindings that bind variables with values.
+- we look at procedures as a pair of pointers, one points to body of the procedure , and the other one points to the environment from which it got created 
+- if an environment encapsulated indside another one have the same vaiable as its super environment, it does what's called shadowing to the varibles, and just start acting on its own variables.
+- An environment is only created whenever you call a procedure and if it has parameters, it binds those paramters to the arguments you've passed to it, if shodwing is necessary it does it.
+so when ever you define a procedure or a variable in an environment they get binded in the table, and when you start calling the procedure , what happens is we build another environment pointing to the current one and we start messing around in that environment till we fininsh our job.
+----------------------------------------------
+sharing when we introduce mutators (see figure 3.16 + 3.17 )
+''''
+
+in the whole previous 2 chapters, We were dealing with any data object as non-mutable thing.
+but with introduction of mutators we now face the sameness issue which leads to the pointer notion.
+with pointers now you can look at any thing as a pointer which encapsulate some data.whenever you change a variable it remains the same capsule (data object) but with different data in the capsule.
+this leads us to the sharing idea, though it was there from the begining ,but it was undetectable.now it becomes significant to see it.
+--------------------------------------------------
+Concurrency : Time is of the esssence.(see figure 3.29)
+'''
+Concurrent programs arises a very serious issue,It's the issue of what piece of information your current procedure possess and what value the procedure is going to assign to the local variable that describes the object.
+Even resolving conccurent programs main issue and handling it in some sequential order makes some problems too,but not catastrophic as dealing with conccurency without and attention. 
+
+
+
+serialization
+'''
+//TO DO 
+
+
+
+DeadLock
+'''
+//TO DO
+
+
+------------------------------------
+Streams
+'''
+//TO DO : write about the methdology followed in here.
+
+streams approach removes our worry about time and return the function definition back to its original one, which is a set of expression that return the same value as long as provided the same arguments. Streams make objects timeless.
+
+----------------------------------------
+Ch.4 - Lazy evaluation
+
+non-strict procedure : is the type of procedures that starts to operate on its body but the arguments are still not evaluated yet.
+
+strict procedures : have its arguments evaluated beforehand then it enters the body.
+
+these two terminologies are the same as applicative order and normal order, but they describe the procedures not the whole programming language.
+
+-------------------
+After implementing the lazy evaluator, you would notice that compilers are not that smart -- they're completely stupid and we just deal with their stupidty each time we start learning about a new programming language.
+
+---------------------------------------------
+What is nondeterministic computing? --> In the theory of computation, a nondeterministic finite state machine is one where there may be several possible next states.
+ ------------------------------------------------
+The amb evaluator : is basically the most complex piece of art in this book. It's a piece of software where you have like thousands of environments stacked together and held tight to create the magic of backtracking.
+
+Mainly the evaluator isn't complex to understand as seperate entites, but when you start tracing a small expression through that evalutor things gets stacked up that you'll forget what was i'm just doing.It will show you that you have to deal with evaluators as seperate entities that take care of it ownself because if you start bargning yourself with all of the possible syntactical combination the could exist you would get overwhelmed.
+
+so yeah take your time to read it atmost 3 times otherwise just proceed.
+
+------------------------------
+Logic Programming
+...
+- We should always ask about 3 things when we're dealing with programming languages (primitves, means of combination, means of abstraction) 
+- primitve : query
+- means of combination : AND, NOT, OR, LISP-VALUE
+- means of abstraction : Rules
+- You use logic programming for expressing what is true, to check whether something is true, to find out what is true.
+- Mainly, what we're concerned about is what is the thing that we want to have or to do.instead of asking ourselves what do we want + how to do that thing.
+- We can look of how this languages in general would work by look at figure 4.4 (the primitive)
+- We can also look at how the combinations (AND, OR) would work by looking at figure 4.5 + 4.6
+- The closed world assumption : when not true (NOT) means 'It's not deduciable'.
+
+----------------------------------
+Machine register 
+...
+Some implementation trick I would like to write about is the one mentioend in page 706.
+Instead of depending on function to return to data elements to get used, we made a chain of lambdas to do that for us.
+-------------------------------------
+about how we could represent data and pairs in machine registers
+...
+we depend on typed pointers to make us able to identify the pointers and also to know how to deal with them.
+- pairs strucutre (primitive to our language - it's not a library in lisp) :
+    It divides memory into 2 places- one for `cars` and one for `cdrs`. We would have their base address some how known to us.
+    when we'd like to allocate a pair and have something that represents its pointer, We just hand back an index (wrapped with indication that this is a pointer to pair).
+    then when you want to access this pair all what you're gonna do, is to tell the compiler take that special pointer that indcates a pair and this offset index and get me whatever is in there.
+- numbers structure
+    It's a special pointer that wraps the type (number) with the actual number (data)
+- symbol structure
+    It's the same but for any symbol to be unique in your program and to be used by `eq?` we have to 
+    use like a map to map the characters with the pointer to so any symbol in your program would be unique and two instances would be identified the as the same.
+    It's called 'interning'.
+
+We assume that we have some primitive vector-set and vector-ref functions in lisp:
+ - vector-set : can be given what part (car or cdr) and a pointer (p+index) and the value (wheter a number or character or pointer to pair).
+ - vector-ref : can be given what part (car or cdr) and a pointer (p+index)
+
+  then you can implement any operation you want, such as (cons, car, cdr).
+
+You can find good notes about how to write a good register-machine code in our solution in file ex5_21. 
+
+------------------------
+Garbage Collection
+...
+The book would follow the approach of stop-and-copy.
+The approach works as follows :     
+    We would split memory into 2 halves (free memory + working memory)
+    We would wait for the working memory to get filled
+    once filled, we would go through it finding what pointers aren't accessible by our register (we would use succession to make sure)
+    then we would move the important ones into the free memory in consequtive locations (which is a great advantage)
+    and interchange the roles of free memory and working memory.
+
+
+The implementation :
+    - relocate-old-result-in-new --> It just sets some place to be used by basically adding the pointer in `free` register into what is called `new` register and then incrementing the `free` register + switch on cases (heartbroken, pointer to pair, pointer but not to pair).
+    - gc-flip --> It continues the process that got interupted by the garbage collector.
+    - begin-garbage-collection --> It's the start of the program, it creates a space for the root which the head of registers chain at the current moment we are doing garbage collection and adds the data in the space allocated and add a reminder to assign that new value to the root regiter. 
+    - gc-loop --> It's the pain of the code, the one that always looks up for issues. It checks the equality of scan and free, if not -- it would start handling the data in car (wheter a normal number OR a pointer to moved place then it would just update the car OR It would allocate a space for the a pointer and copy the data in it and also update the car).
+    - Update-car --> is depending on register `new`. It blindly sets the car of pointer in `scan` to the content in `new`. Then, It handles the cdr of the `scan` and do the same as what happend with car.
+    - Update-cdr --> Blindly, sets the cdr of `scan` to the what is in `new` and increments `scan` then moves to gc-loop again. 
+
+Framed-stack discpline --> It's the discpline that follows the method of memorizing all the registers before hitting a recursive call.
+
+tail-recursion --> from the naming, It's looking for a recursive call in the tail of the procedure, if such a thing exists it would be able to do an iterative process rather than a recurisve one.
